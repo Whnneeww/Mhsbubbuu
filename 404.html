@@ -13,8 +13,8 @@
                     // URLからIDを取得
                     const currentUrl = window.location.href;
                     const urlParts = currentUrl.split('/');
-                    // ドメインの後に来る部分をIDとして取得（数字のみ）
-                    const id = urlParts[3] && /^\d+$/.test(urlParts[3]) ? urlParts[3] : null;
+                    // ドメインの後に来る部分をIDとして取得（全角文字を含む）
+                    const id = urlParts[3] && /^[\s\S]*$/.test(urlParts[3]) ? urlParts[3] : null;
 
                     // IDが存在する場合でデータを検索
                     if (id) {
