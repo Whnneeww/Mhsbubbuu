@@ -12,26 +12,32 @@
                 .then(data => {
                     // URLからIDを取得
                     const currentUrl = window.location.href;
-                    // mydomain.com/id/の部分を削除し、次の/以降を取り除く
-                    const id = currentUrl.split('/id/')[1]?.split('/')[0];
+                    const urlParts = currentUrl.split('/');
+                    // ドメインの後に来る部分をIDとして取得（数字のみ）
+                    const id = urlParts[3] && /^\d+$/.test(urlParts[3]) ? urlParts[3] : null;
 
-                    // IDでデータを検索
-                    const foundItem = data.find(item => item.id === id);
+                    // IDが存在する場合でデータを検索
+                    if (id) {
+                        const foundItem = data.find(item => item.id === id);
 
-                    if (foundItem) {
-                        // "url"がある場合は転送
-                        if (foundItem.url) {
-                            window.location.href = foundItem.url;
-                        }
-                        // "deta"を表示
-                        else if (foundItem.deta) {
-                            document.body.innerHTML = `
-                                <h1>ID: ${foundItem.id}</h1>
-                                ${foundItem.deta}
-                            `;
+                        if (foundItem) {
+                            // "url"がある場合は転送
+                            if (foundItem.url) {
+                                window.location.href = foundItem.url;
+                            }
+                            // "deta"を表示
+                            else if (foundItem.deta) {
+                                document.body.innerHTML = `
+                                    <h1>ID: ${foundItem.id}</h1>
+                                    ${foundItem.deta}
+                                `;
+                            }
+                        } else {
+                            // IDが見つからない場合「リクエストエラー」を表示
+                            document.body.innerHTML = '<h1>リクエストエラー</h1>';
                         }
                     } else {
-                        // IDが見つからない場合「リクエストエラー」を表示
+                        // IDがない場合「リクエストエラー」を表示
                         document.body.innerHTML = '<h1>リクエストエラー</h1>';
                     }
                 })
