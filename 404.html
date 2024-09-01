@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Search</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // JSONデータを取得する関数
+            fetch('IDlist.json')
+                .then(response => response.json())
+                .then(data => {
+                    // URLからIDを取得
+                    const currentUrl = window.location.href;
+                    // mydomain.com/id/の部分を削除し、次の/以降を取り除く
+                    const id = currentUrl.split('/id/')[1]?.split('/')[0];
+
+                    // IDでデータを検索
+                    const foundItem = data.find(item => item.id === id);
+
+                    if (foundItem) {
+                        // "url"がある場合は転送
+                        if (foundItem.url) {
+                            window.location.href = foundItem.url;
+                        }
+                        // "deta"を表示
+                        else if (foundItem.deta) {
+                            document.body.innerHTML = `
+                                <h1>ID: ${foundItem.id}</h1>
+                                ${foundItem.deta}
+                            `;
+                        }
+                    } else {
+                        // IDが見つからない場合「リクエストエラー」を表示
+                        document.body.innerHTML = '<h1>リクエストエラー</h1>';
+                    }
+                })
+                .catch(error => {
+                    console.error('エラーが発生しました:', error);
+                    document.body.innerHTML = '<h1>リクエストエラー</h1>';
+                });
+        });
+    </script>
+</head>
+<body>
+    <h1>データを検索中...</h1>
+</body>
+</html>
